@@ -53,7 +53,7 @@ class re:
 
 
 def rawsusceptibility(energy, moment, H_direction, H_size, T):
-    """Returns susceptibility calculated for ënergy levels at given temperature"""
+    """Returns susceptibility calculated for energy levels at given temperature"""
 
     prst = np.exp(-energy/T)
     Z = sum(prst);                                    # canonical partition function 
