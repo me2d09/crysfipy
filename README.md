@@ -1,4 +1,4 @@
-# CrysFiPy #
+![crysfipy-web.png](https://bitbucket.org/repo/eEgdga/images/1770112620-crysfipy-web.png)
 
 Crystal field suite for python. It allows to calculate energy levels and bulk properties on basis of crystal field calculations.
 
