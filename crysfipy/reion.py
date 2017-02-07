@@ -102,7 +102,12 @@ class re:
     
     def getlevels(self):
         """Calculate degeneracy of the levels and sort the matrix"""
+        #orthogonalization not needed?
+        #self.rawev,R = np.linalg.qr(self.rawev)
         
+        #change the sign to be positive :)
+        self.rawev = self.rawev * np.sign(np.sum(self.rawev, axis=0))
+
         self.energy = self.rawenergy - min(self.rawenergy)     # shift to zero level	
         #sorting
         self.ev = self.rawev[:,self.rawenergy.argsort()]
@@ -206,7 +211,7 @@ def rawneutronint(E, deg, J2, gJ, T):
     """Returns transition intensities in barn."""
     """E - matrix of energy levels in meV"""
     """J2 - matrix of squared J"""
-    r02 = const.r0 * const.r0  #r0^2[barn]
+    r02 = const.R0 * const.R0  *1e28 # to have value in barn
     c = np.pi * r02 * gJ * gJ
     
     prst = np.exp(-E*const.eV2K/T)

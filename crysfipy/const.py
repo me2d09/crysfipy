@@ -1,19 +1,21 @@
 from math import pi
 
-_k = 1.38062      # x1e-23 J/K      Boltzmann constant k_B
-_h = 6.626075540  # x1e-34 Jsec     Planck constant h
-_hq = _h/2/pi
-_e = 1.6021773349 # x1e-19 Coulomb  electron charge 
-_c = 2.99792458   # x1e8 m/sec      Speed of light
-_m = 9.109389754  # x1e-31 Kg       Mass of electron m 
+_h = 6.626075540e-34  # Jsec     Planck constant h
+_e = 1.6021773349e-19 # Coulomb  electron charge 
+_c = 2.99792458e8   # m/sec      Speed of light
+_m = 9.109389754e-31  # Kg       Mass of electron m 
+_gn = -3.82608545  # g-factor of the neutron
 
+_hq = _h/2/pi        #                h bar
+_gamn = _gn/2/_hq    #gyromagnetic ratio of the neutron
+_r0 = _e*_e/_m*1e-7  #classical radius of electron
+R0 = _r0*_gn/2  #strenght of dipolar neutron electron interaction
 
 uB_SI = 9.27400968 * 1e-24          # J/T
 kB_SI = 1.38064880 * 1e-23          # J/K
 NA    = 6.02214129 * 1e+23          # 1 / mol
 eV2K    = 11.6
 uB = uB_SI/kB_SI                    # uB ... 0.67171
-r0 = 100*_hq*_hq/_m/_e/_e/_c/_c     #Bohr radius
 
 # conversion from [mol/m3] to intern [T/uB]
 
