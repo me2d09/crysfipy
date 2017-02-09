@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7134b06d-ae51-4945-a521-2095fa3cb9e7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>test.py</StartupFile>
+    <StartupFile>example.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,7 +28,7 @@
     <Compile Include="crysfipy\reion.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="test.py" />
+    <Compile Include="example.py" />
     <Compile Include="crysfipy\const.py">
       <SubType>Code</SubType>
     </Compile>

@@ -51,7 +51,7 @@ class ion:
         }[self.name]
 
         self.J     = M[0]
-        self.J2p1  = 2 * M[0] + 1
+        self.J2p1  = int(2 * M[0] + 1)
         self.gJ    = M[1]
         self.Alpha = M[2]
         self.Beta  = M[3]

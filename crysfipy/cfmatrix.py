@@ -25,7 +25,7 @@ def J_minus(J,convention = 1):
 
 def O_20(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	E = eye(J2p1)
@@ -34,7 +34,7 @@ def O_20(J,convention = 1):
 
 def O_22(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jplus = J_plus(J,convention)
 	Jminus = J_minus(J,convention)
@@ -43,7 +43,7 @@ def O_22(J,convention = 1):
 
 def O_40(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	E = eye(J2p1)
@@ -53,7 +53,7 @@ def O_40(J,convention = 1):
 
 def O_42(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	Jplus = J_plus(J,convention)
@@ -68,7 +68,7 @@ def O_42(J,convention = 1):
 
 def O_43(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	Jplus = J_plus(J,convention)
@@ -83,7 +83,7 @@ def O_43(J,convention = 1):
 
 def O_44(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jplus = J_plus(J,convention)
 	Jminus = J_minus(J,convention)
@@ -93,7 +93,7 @@ def O_44(J,convention = 1):
 
 def O_60(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	E = eye(J2p1)
@@ -102,7 +102,7 @@ def O_60(J,convention = 1):
 
 def O_62(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 	
 	E = eye(J2p1)
 	Jz = J_z(J,convention)
@@ -117,7 +117,7 @@ def O_62(J,convention = 1):
 
 def O_63(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jz = J_z(J,convention)
 	Jplus = J_plus(J,convention)
@@ -131,7 +131,7 @@ def O_63(J,convention = 1):
 
 def O_64(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	E = eye(J2p1)
 	Jz = J_z(J,convention)
@@ -147,7 +147,7 @@ def O_64(J,convention = 1):
 
 def O_66(J,convention = 1):
 	JJ = J*(J+1)
-	J2p1 = 2*J + 1
+	J2p1 = int(2*J + 1)
 
 	Jplus = J_plus(J,convention)
 	Jminus = J_minus(J,convention)

@@ -1,6 +1,6 @@
-import const
-from const import ion
-from cfmatrix import *
+import crysfipy.const as C
+from crysfipy.const import ion
+from crysfipy.cfmatrix import *
 import numpy as np
 from numpy import diag, conj, transpose, dot
 from numpy.linalg import eig
@@ -90,6 +90,8 @@ class re:
     def __init__(self, name, field, cfp):
         self.name = name
         self.field = field
+        if type(cfp) is list:
+            cfp = cfpars(*cfp)
         self.cfp = cfp
         
         self.H = np.array(field)
@@ -187,7 +189,7 @@ class re:
             B.B62 * O_62(i.J) + \
             B.B64 * O_64(i.J) + \
             B.B66 * O_66(i.J) + \
-            const.uB * i.gJ * (self.Jx * self.H[0] + self.Jy * self.H[1] + self.Jz * self.H[2])
+            C.uB * i.gJ * (self.Jx * self.H[0] + self.Jy * self.H[1] + self.Jz * self.H[2])
         
         E, U = eig(hamiltonian);
         
@@ -211,10 +213,10 @@ def rawneutronint(E, deg, J2, gJ, T):
     """Returns transition intensities in barn."""
     """E - matrix of energy levels in meV"""
     """J2 - matrix of squared J"""
-    r02 = const.R0 * const.R0  *1e28 # to have value in barn
+    r02 = const.R0 * C.R0  *1e28 # to have value in barn
     c = np.pi * r02 * gJ * gJ
     
-    prst = np.exp(-E*const.eV2K/T)
+    prst = np.exp(-E*C.eV2K/T)
     Z = sum(prst*deg) #multiply with degeneracy of the level
     prst = prst / Z
     trans_int = J2 * prst[:, np.newaxis] * c  #transition intensities in barn
@@ -252,6 +254,6 @@ def susceptibility(ion, T):
     try:
         for temp in T:
             y.append(rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, temp))
-    except TypeError, te:
+    except TypeError as te:
         y = rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, T)
     return y
