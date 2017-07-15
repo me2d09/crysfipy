@@ -1,4 +1,4 @@
-from crysfipy.reion import re, susceptibility as susc
+﻿from crysfipy.reion import re, susceptibility as susc
 import crysfipy.const as C
 import numpy as np
 
@@ -7,7 +7,7 @@ print("*** CrysFiPy test ***")
 print()
 print("Cerium 3+")
 ce = re("Ho", [1,0,0], 
-        [-0.173477508,
+        ["t", -0.173477508,
         0.001084591,
         -0.012701252,
         -3.34835E-06,
