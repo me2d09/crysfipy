@@ -1,4 +1,4 @@
-import crysfipy.const as C
+﻿import crysfipy.const as C
 from crysfipy.const import ion
 from crysfipy.cfmatrix import *
 import numpy as np
@@ -108,11 +108,11 @@ class re:
         #self.rawev,R = np.linalg.qr(self.rawev)
         
         #change the sign to be positive :)
-        self.rawev = self.rawev * np.sign(np.sum(self.rawev, axis=0))
+        self.ev = self.rawev * np.sign(np.sum(self.rawev, axis=0))
 
         self.energy = self.rawenergy - min(self.rawenergy)     # shift to zero level	
         #sorting
-        self.ev = self.rawev[:,self.rawenergy.argsort()]
+        self.ev = self.ev[:,self.rawenergy.argsort()]
         self.energy = np.sort(self.energy)
         #get sorted Jx,Jz and Jz 
         self.Jz = dot(dot(self.ev.conj().transpose(), J_z(self.J)), self.ev)
