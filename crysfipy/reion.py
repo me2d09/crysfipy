@@ -1,4 +1,4 @@
-﻿import crysfipy.const as C
+import crysfipy.const as C
 from crysfipy.const import ion
 from crysfipy.cfmatrix import *
 import numpy as np
@@ -10,15 +10,16 @@ class cfpars:
     """Set of crystal field parameters"""
     
     pars = {
-    "c": ["B40", "B60"],
-    "h": ["B20", "B40", "B44", "B66"],
-    "t": ["B20", "B40", "B44", "B60", "B64"],
-    "o": ["B20", "B22", "B40", "B42", "B44", "B60", "B62", "B64", "B66"],
+    "c": ["B40", "B60"],                                     #4-fold cubic
+    "h": ["B20", "B40", "B44", "B66"],                       #hexagonal
+    "t": ["B20", "B40", "B44", "B60", "B64"],                #tetragonal
+    "o": ["B20", "B22", "B40", "B42", "B44", "B60", "B62", "B64", "B66"],  
+                                                             #orthorombic
     }
     
     def __init__(self, *args, **kwargs):
         skipNonnamed = False
-        self.sym = ""  #orthorombic or more general symetry (=no constrains)
+        self.sym = ""  #orthorombic symetry (=no constrains)
         #clear all params
         for name in self.pars["o"]: self.asignParameter(name, 0)
         #check named args
@@ -46,7 +47,8 @@ class cfpars:
                     i+=1
         #do symmetry magic
         if self.sym == "c":
-            raise NotImplementedError("Cubic symmetry not yet supported!")
+            self.B44 = 5 * self.B40;
+            self.B64 = -21 * self.B60;
             
     def __str__(self):
         ret = ""
@@ -108,11 +110,11 @@ class re:
         #self.rawev,R = np.linalg.qr(self.rawev)
         
         #change the sign to be positive :)
-        self.ev = self.rawev * np.sign(np.sum(self.rawev, axis=0))
+        self.rawev = self.rawev * np.sign(np.sum(self.rawev, axis=0))
 
         self.energy = self.rawenergy - min(self.rawenergy)     # shift to zero level	
         #sorting
-        self.ev = self.ev[:,self.rawenergy.argsort()]
+        self.ev = self.rawev[:,self.rawenergy.argsort()]
         self.energy = np.sort(self.energy)
         #get sorted Jx,Jz and Jz 
         self.Jz = dot(dot(self.ev.conj().transpose(), J_z(self.J)), self.ev)
@@ -179,7 +181,7 @@ class re:
         B = self.cfp
         
         
-        hamiltonian =  \
+        self.hamiltonian =  \
             B.B20 * O_20(i.J) + \
             B.B22 * O_22(i.J) + \
             B.B40 * O_40(i.J) + \
@@ -191,7 +193,7 @@ class re:
             B.B66 * O_66(i.J) + \
             C.uB * i.gJ * (self.Jx * self.H[0] + self.Jy * self.H[1] + self.Jz * self.H[2])
         
-        E, U = eig(hamiltonian);
+        E, U = eig(self.hamiltonian);
         
         self.rawenergy = np.real(E);  
         if sum(np.iscomplex(E)) > 0:
@@ -213,7 +215,7 @@ def rawneutronint(E, deg, J2, gJ, T):
     """Returns transition intensities in barn."""
     """E - matrix of energy levels in meV"""
     """J2 - matrix of squared J"""
-    r02 = const.R0 * C.R0  *1e28 # to have value in barn
+    r02 = C.R0 * C.R0  *1e28 # to have value in barn
     c = np.pi * r02 * gJ * gJ
     
     prst = np.exp(-E*C.eV2K/T)
