@@ -7,34 +7,80 @@ from numpy.linalg import eig
 import numbers
 
 class cfpars:
-    """Set of crystal field parameters"""
+    """Class representing set of crystal field parameters.
+
+    It simplifies the creation of the CF parameter sets considering symmetry
+    of the environment.
+    Other modules expect that CF parameters are in *meV* (SI units). 
+    But if you just want to diagonalize Hamiltonian, it is possible to use *K* (and results will be in *K*).
+
+    Initialization can be done with named arguments or without. 
+    If arguments are not named, symmetry is considered from the first string argument.
+    Stevens parameters are considered differently for different symmetries in following order:
+
+    | cubic: B40, B60
+    | hexagonal: B20, B40, B44, B66
+    | tetragonal: B20, B40, B44, B60, B64
+    | orthorombic: B20, B22, B40, B42, B44, B60, B62, B64, B66
+    
+
+    Attributes:
+        BXY (float, optional): Attribute corresponding to :math:`B_X^Y` Stevens Parameters.
+            See Hutchings_.  If at least one CF parameter is specified as a named argument, 
+            non-named numerical parameters are ignored.
+        sym (str, optional): Symmetry of the crystal field
+
+            | c - cubix
+            | h - hexagonal
+            | t - tetragonal
+            | o - orthorombic (default)
+           
+    Examples:
+        Create set of CF parameters by named parameters:
+
+        >>> print(cfpars(sym = "c", B40 = 10))
+        Set of CF parameters for cubic symmetry:
+        B40 = 10.0000
+        B60 = 0.0000
+        B44 = 50.0000
+        B64 = 0.0000
+
+        Use of non-named parameters:
+
+        >>> print(cfpars("c", 10, 1))
+        Set of CF parameters for cubic symmetry:
+        B40 = 10.0000
+        B60 = 1.0000
+        B44 = 50.0000
+        B64 = -21.0000
+
+    """
     
     pars = {
-    "c": ["B40", "B60"],                                     #4-fold cubic
-    "h": ["B20", "B40", "B44", "B66"],                       #hexagonal
-    "t": ["B20", "B40", "B44", "B60", "B64"],                #tetragonal
-    "o": ["B20", "B22", "B40", "B42", "B44", "B60", "B62", "B64", "B66"],  
-                                                             #orthorombic
+    "c": ["cubic", ["B40", "B60", "B44", "B64"]],            
+    "h": ["hexagonal", ["B20", "B40", "B44", "B66"]],              
+    "t": ["tetragonal", ["B20", "B40", "B44", "B60", "B64"]],            
+    "o": ["orthorombic", ["B20", "B22", "B40", "B42", "B44", "B60", "B62", "B64", "B66"]],  
     }
     
     def __init__(self, *args, **kwargs):
         skipNonnamed = False
         self.sym = ""  #orthorombic symetry (=no constrains)
         #clear all params
-        for name in self.pars["o"]: self.asignParameter(name, 0)
+        for name in self.pars["o"][1]: self._asignParameter(name, 0)
         #check named args
         for name, value in kwargs.items():
             #check symetry constrain
             if name == "sym":
-                self.sym = self.asignSymmetry(value)    
+                self.sym = self._asignSymmetry(value)    
             if name[0] == "B":  #it is a crystal field
                 skipNonnamed = True
-                self.asignParameter(name, value)
+                self._asignParameter(name, value)
         #check non named args
         if self.sym == "":
             for value in args:
                 if isinstance(value, str):
-                    self.sym = self.asignSymmetry(value)
+                    self.sym = self._asignSymmetry(value)
                     break  #just consider first string in list
         if self.sym == "": self.sym = "o" #default
         if not skipNonnamed:
@@ -42,8 +88,8 @@ class cfpars:
             i = 0
             for value in args:
                 if isinstance(value, numbers.Real):
-                    if i >= len(self.pars[self.sym]): break
-                    self.asignParameter(self.pars[self.sym][i], value)
+                    if i >= len(self.pars[self.sym][1]): break
+                    self._asignParameter(self.pars[self.sym][1][i], value)
                     i+=1
         #do symmetry magic
         if self.sym == "c":
@@ -51,17 +97,17 @@ class cfpars:
             self.B64 = -21 * self.B60;
             
     def __str__(self):
-        ret = ""
-        for name in self.pars["o"]: ret += self.printParameter(name) + "\n"
+        ret = "Set of CF parameters for %s symmetry:" % (self.pars[self.sym][0])
+        for name in self.pars[self.sym][1]: ret += self._printParameter(name) + "\n"
         return ret
     
             
-    def asignSymmetry(self, inp):
+    def _asignSymmetry(self, inp):
         if inp[0] == "t" or  inp[0] == "h" or  inp[0] == "c":
             return inp[0]
         return ""
                   
-    def asignParameter(self, name, value):
+    def _asignParameter(self, name, value):
         if name == "B20": self.B20 = value
         if name == "B22": self.B22 = value
         if name == "B40": self.B40 = value
@@ -72,7 +118,7 @@ class cfpars:
         if name == "B64": self.B64 = value
         if name == "B66": self.B66 = value
         
-    def printParameter(self, name):
+    def _printParameter(self, name):
         if name == "B20": return "%s = %.4f" % (name, self.B20)
         if name == "B22": return "%s = %.4f" % (name, self.B22)
         if name == "B40": return "%s = %.4f" % (name, self.B40)
@@ -87,9 +133,25 @@ class cfpars:
 
 
 class re:
-    """Object representing rare-earth ion in CF potential"""
+    """Object representing rare-earth ion in CF potential
+    
+    Attributes:
+        name (str): Name of the ion.
+        field (1D array of floats): external magnetic field applied in *T*.
+        cfp (:obj:`crysfipy.reion.cfpars`): Crystal field parameters
+        calculate (bool, optional): If true (default) then it automatically diagonalizes
+            Hamiltonian and calculates energy levels.
 
-    def __init__(self, name, field, cfp):
+    Examples:
+        
+        >>> ce = re("Ce", [0,0,0], ["c", 10])
+        >>> print(ce)
+        Energy levels:
+        E(0) =	0.0000	 2fold-degenerated
+        E(1) =	3600.0000	 4fold-degenerated
+    """
+
+    def __init__(self, name, field, cfp, calculate = True):
         self.name = name
         self.field = field
         if type(cfp) is list:
@@ -100,12 +162,15 @@ class re:
         self.H_size = np.sqrt(dot(self.H, self.H.conj().transpose()))
         if self.H_size > 0:
             self.H_direction = self.H / self.H_size
-        self.calculate()
+        if (calculate):
+            self.getlevels()
     
     
     
     def getlevels(self):
         """Calculate degeneracy of the levels and sort the matrix"""
+
+        self._calculate()
         #orthogonalization not needed?
         #self.rawev,R = np.linalg.qr(self.rawev)
         
@@ -166,7 +231,7 @@ class re:
             ret += "E({:d}) =\t{:.4f}\t{:2d}fold-degenerated\n".format(i, x[0], int(x[1]))
         return ret
       
-    def calculate(self):
+    def _calculate(self):
         """Calculates energy splitting in CF potential"""
 
         i = ion(self.name)
@@ -211,10 +276,16 @@ class re:
 
 
 
-def rawneutronint(E, deg, J2, gJ, T):
-    """Returns transition intensities in barn."""
-    """E - matrix of energy levels in meV"""
-    """J2 - matrix of squared J"""
+def _rawneutronint(E, deg, J2, gJ, T):
+    """Returns transition intensities in barn.
+
+    Args:
+        E (1D array of floats): matrix of energy levels in meV
+        deg (1D array of floats): degeneracies of the levels
+        J2 (2D array of floats): matrix of squared J
+        gJ (float): Landé factor
+        T (float): temperature in *K*
+    """
     r02 = C.R0 * C.R0  *1e28 # to have value in barn
     c = np.pi * r02 * gJ * gJ
     
@@ -225,7 +296,19 @@ def rawneutronint(E, deg, J2, gJ, T):
     return trans_int
 
 def neutronint(ion, T, direction = "t"):
-    """Returns matrix of energy and transition intensity at given temperature"""
+    """Returns matrix of energy and transition intensity at given temperature
+    
+    Args:
+        ion (:obj:`crysfipy.reion.re`): Rare-earth ion object
+        T (float): temperature in *K*
+        direction (str): Direction of the Q in which to calculate
+            
+            | t - powder (default)
+            | x - using :math:`J_x`
+            | y - using :math:`J_y`
+            | z - using :math:`J_z`
+        
+    """
     jumps = ion.deg_e[:,0] - ion.deg_e[:,0][:, np.newaxis]
     jumps = jumps.flatten()
     if direction == "x":
@@ -236,11 +319,11 @@ def neutronint(ion, T, direction = "t"):
         J2 = ion.deg_Jz2
     else:
         J2 = ion.deg_Jt2
-    tint = rawneutronint(ion.deg_e[:,0], ion.deg_e[:,1], J2, ion.gJ, T).flatten()
+    tint = _rawneutronint(ion.deg_e[:,0], ion.deg_e[:,1], J2, ion.gJ, T).flatten()
     tint = tint[jumps.argsort()]
     return np.array([np.sort(jumps),tint]) 
 
-def rawsusceptibility(energy, moment, H_direction, H_size, T):
+def _rawsusceptibility(energy, moment, H_direction, H_size, T):
     """Returns susceptibility calculated for energy levels at given temperature"""
 
     prst = np.exp(-energy/T)
@@ -255,7 +338,7 @@ def susceptibility(ion, T):
     y = []
     try:
         for temp in T:
-            y.append(rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, temp))
+            y.append(_rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, temp))
     except TypeError as te:
-        y = rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, T)
+        y = _rawsusceptibility(ion.energy, ion.moment, ion.H_direction, ion.H_size, T)
     return y

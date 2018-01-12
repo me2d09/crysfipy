@@ -5,7 +5,6 @@ import numpy as np
 
 print("*** CrysFiPy test ***")
 print()
-print("Cerium 3+")
 ce = re("Ho", [1,0,0], 
         ["t", -0.173477508,
         0.001084591,

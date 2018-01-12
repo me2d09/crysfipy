@@ -6,5 +6,8 @@
 # Licensed under a 2-clause BSD license, see LICENSE.
 # *****************************************************************************
 
-__version__ = '0.0.1'
+__version__ = '0.5'
 
+from crysfipy.cfmatrix import *
+from crysfipy.const import *
+from crysfipy.reion import *
