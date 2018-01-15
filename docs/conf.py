@@ -8,7 +8,10 @@ sys.path.insert(0, os.path.abspath('./..'))
 sys.path.append('..')
 
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.mathjax']
+extensions = ['sphinx.ext.autodoc', 
+              'sphinx.ext.napoleon', 
+              'sphinx.ext.mathjax', 
+              'nbsphinx']
 templates_path = ['_templates']
 
 source_suffix = '.rst'

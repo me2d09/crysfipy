@@ -2,7 +2,7 @@
     :hidden:
 
     reference
-    examples
+    notebooks
     installation
     roadmap
     changelog
