@@ -189,3 +189,6 @@ _Pvt_Extensions/
 ModelManifest.xml
 *.pyc
 docs/_build/
+.vs/
+CrysFiPy.egg-info/
+dist/
