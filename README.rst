@@ -1,6 +1,6 @@
-.. figure:: _static/logo.png
-   :alt: CrysFiPy
-
+=================
+CrysFiPy
+=================
 
 Crystal field suite for python. It allows to calculate energy levels,
 bulk properties and neutron scattering intensities on basis of crystal
@@ -48,7 +48,7 @@ Feature requests and bug reports can be made using the Bitbucket issues interfac
 Copyright & Licensing
 ---------------------
 Copyright (c) 2014-2018, Petr Čermák, Jan Zubáč and Karel Pajskr,
-Charles University in Prague. Released under GPLv3 license, detailse are in :download:`COPYING <../COPYING>`.
+Charles University in Prague. Released under GPLv3 license, detailse are in COPYING file.
 
 Disclaimer
 ----------

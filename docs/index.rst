@@ -4,7 +4,6 @@
     reference
     notebooks
     installation
-    roadmap
     changelog
     contact
 
