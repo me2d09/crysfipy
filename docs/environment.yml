@@ -9,3 +9,4 @@ dependencies:
   - numpy
   - pip:
     - nbsphinx
+    - "--editable=git+https://github.com/bitprophet/releases/#egg=releases"
