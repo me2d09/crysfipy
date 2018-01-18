@@ -13,4 +13,4 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - pip install -r requirements.txt
           - pip install pytest
-          - python -m pytest tests/
+          - python -m pytest  --junitxml=./test-reports/junit.xml tests/
