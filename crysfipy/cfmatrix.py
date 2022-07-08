@@ -16,7 +16,7 @@ from numpy.linalg import matrix_power as mp
 
 
 def J_z(J,convention=1):
-    return diag(linspace(convention * J,convention * (-J),2*J+1))
+    return diag(linspace(convention * J,convention * (-J),int(2*J+1)))
 
 def J_y(J,convention = 1):
 	return .5/1.j*(J_plus(J,convention) - J_minus(J,convention))
@@ -27,7 +27,7 @@ def J_x(J,convention = 1):
 
 
 def J_plus(J,convention = 1):
-	p1 = linspace(-J,J-1,2*J)
+	p1 = linspace(-J,J-1,int(2*J))
 	p1 = sqrt(J*(J+1) - p1*(p1+1))
 	return diag(p1,convention)
 

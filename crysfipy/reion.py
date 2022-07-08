@@ -72,7 +72,7 @@ class cfpars:
     
     pars = {
     "c": ["cubic", ["B40", "B60", "B44", "B64"]],            
-    "h": ["hexagonal", ["B20", "B40", "B44", "B66"]],              
+    "h": ["hexagonal", ["B20", "B40", "B60", "B66"]],              
     "t": ["tetragonal", ["B20", "B40", "B44", "B60", "B64"]],            
     "o": ["orthorombic", ["B20", "B22", "B40", "B42", "B44", "B60", "B62", "B64", "B66"]],  
     }

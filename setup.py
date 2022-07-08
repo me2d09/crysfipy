@@ -4,8 +4,8 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
-setup(name='CrysFiPy',
-      version='0.5.1',
+setup(name='crysfipy',
+      version='0.5.2',
       description='Crystal field suite for python.',
       long_description=readme(),
       classifiers=[
@@ -21,7 +21,7 @@ setup(name='CrysFiPy',
       author='Petr Čermák',
       author_email='pcermak@live.com',
       license='GPLv3',
-      packages=['CrysFiPy'],
+      packages=['crysfipy'],
       install_requires=[
           'numpy',
       ],
